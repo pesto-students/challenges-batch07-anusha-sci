@@ -1,31 +1,15 @@
-/* eslint-disable */
-function duplicateLetters(s) {
-  var lettersList = s.split("");
-  var setOfLetters  = new Set(lettersList);
-  var maxCount = 0;
-  if (lettersList.length == setOfLetters.size) {
-    return false
-  } else {
-    
-    for (let value of setOfLetters) {
-      let count;
-      count = 0
-      for (let j = 0; j < lettersList.length; j ++) {
-        if (value == lettersList[j]) {
-          count ++
-        }
-      }
-    
-      if ( count > maxCount) {
-        maxCount = count
-      }
-
+function duplicateLetters(str) {
+  const charMap = {};
+  for (const char of str) {
+    if (char in charMap) {
+      charMap[char] += 1;
+    } else {
+      charMap[char] = 1;
     }
-    return maxCount
-
   }
-  
-  
+  const maxCount = Math.max(...Object.values(charMap));
+  if (maxCount <= 1) return false;
+  return maxCount;
 }
 
 export {
