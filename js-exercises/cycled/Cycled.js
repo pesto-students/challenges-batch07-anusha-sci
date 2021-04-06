@@ -2,37 +2,24 @@ class Cycled {
   constructor(arr) {
     this.fixture = [...arr];
     this.currentIndex = 0;
+    this.length = arr.length;
   }
 
   current() {
-    return this.fixture[this.currentIndex];
+    return this.step(0);
   }
 
   next() {
-    this.currentIndex = (this.currentIndex + 1) % this.fixture.length;
-    return this.current();
+    return this.step(1);
   }
 
   previous() {
-    this.currentIndex -= 1;
-    if (this.currentIndex < 0) {
-      this.currentIndex = this.fixture.length - 1;
-    }
-    return this.current();
+    return this.step(-1);
   }
 
   step(n) {
-    if (n >= 0) {
-      this.currentIndex = (this.currentIndex + n) % this.fixture.length;
-    } else {
-      for (let i = 0; i < -n; i += 1) {
-        this.currentIndex -= 1;
-        if (this.currentIndex < 0) {
-          this.currentIndex = this.fixture.length - 1;
-        }
-      }
-    }
-    return this.current();
+    this.currentIndex = (this.currentIndex + (n % this.length) + this.length) % this.length;
+    return this.fixture[this.currentIndex];
   }
 
   get index() {
@@ -40,18 +27,7 @@ class Cycled {
   }
 
   set index(n) {
-    if (n >= 0) {
-      this.currentIndex = n % this.fixture.length;
-    } else {
-      const n1 = n % this.fixture.length;
-      this.currentIndex = 0;
-      for (let i = 0; i < -n1; i += 1) {
-        this.currentIndex -= 1;
-        if (this.currentIndex < 0) {
-          this.currentIndex = this.fixture.length - 1;
-        }
-      }
-    }
+    this.currentIndex = ((n % this.length) + this.length) % this.length;
   }
 
   reversed() {
@@ -59,15 +35,22 @@ class Cycled {
     return this[Symbol.iterator]();
   }
 
+  // get reversed() {
+  //   const _this = this;
+  //   return function* () {
+  //     yield _this.previous();
+  //   };
+  // }
+
   indexOf(item) {
     return this.fixture.indexOf(item);
   }
 
   * [Symbol.iterator]() {
     let index = this.currentIndex;
-    for (let i = 0; i < this.fixture.length; i += 1) {
+    for (let i = 0; i < this.length; i += 1) {
       yield this.fixture[index];
-      index = (index + 1) % this.fixture.length;
+      index = (index + 1) % this.length;
     }
   }
 }
